@@ -7,6 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface JobRepository extends JpaRepository<Job, Integer> {
-    List<Job> findByPostedBy(Recruiter r);
-    List<Job> findByRequiredSkillsContainingIgnoreCaseAndLocationContainingIgnoreCase(String skill, String location);
-}
+  List<Job> findByPostedBy(Recruiter recruiter);
+  }

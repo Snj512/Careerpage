@@ -22,7 +22,8 @@ public class Recruiter {
     @Column(unique = true)
     private String emailId;
     private String password;
-    private recruiterType recruiterType;
+
+    private Role Role;
     @ManyToOne
     @JoinColumn(name = "created_by")
     private Recruiter createdBy;

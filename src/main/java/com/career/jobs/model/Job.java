@@ -27,12 +27,12 @@ public class Job {
     private int recruiterId;
     @ManyToOne
     @JoinColumn(name = "posted_by", nullable = false)
-    private recruiter postedBy;
+    private Recruiter postedBy;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Jobapplication> applications;
+    private List<JobApplication> applications;
 
 }
