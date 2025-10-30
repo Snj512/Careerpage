@@ -1,7 +1,11 @@
 package com.career.jobs.repository;
 
-import com.career.jobs.model.candidates;
+import com.career.jobs.model.Candidates;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CandidateRepo extends JpaRepository<candidates, Integer> {
+import java.util.Optional;
+
+public interface CandidateRepo extends JpaRepository<Candidates, Integer> {
+    Optional<Candidates> findByEmail(String email);
+    boolean existsByEmail(String email);
 }
