@@ -1,5 +1,6 @@
 package com.career.jobs.controller;
 
+import com.career.jobs.dto.ApplicantDto;
 import com.career.jobs.dto.JobRequestDto;
 import com.career.jobs.dto.JobResponseDto;
 import com.career.jobs.service.JobService;
@@ -29,5 +30,11 @@ public class JobController {
     @GetMapping("/my-jobs")
     public ResponseEntity<List<JobResponseDto>> getMyJobs() {
         return ResponseEntity.ok(jobService.getMyJobs());
+    }
+
+    @PreAuthorize("hasAnyRole('RECRUITER','ADMIN')")
+    @GetMapping("/{jobId}/applicants")
+    public ResponseEntity<List<ApplicantDto>> getApplicants(@PathVariable Integer jobId) {
+        return ResponseEntity.ok(jobService.getApplicants(jobId));
     }
 }
