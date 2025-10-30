@@ -32,6 +32,7 @@ public class JobController {
         return ResponseEntity.ok(jobService.getMyJobs());
     }
 
+    //applicants against a job
     @PreAuthorize("hasAnyRole('RECRUITER','ADMIN')")
     @GetMapping("/{jobId}/applicants")
     public ResponseEntity<List<ApplicantDto>> getApplicants(@PathVariable Integer jobId) {

@@ -30,27 +30,28 @@ public class CandidateJobController {
         return ResponseEntity.ok(candidateJobService.getJobDetails(id));
     }
 
-    // 🟡 CANDIDATE: Apply for a job
+    //CANDIDATE: Apply for a job
     @PreAuthorize("hasRole('CANDIDATE')")
     @PostMapping("/jobs/{id}/apply")
     public ResponseEntity<ApiResponse> applyForJob(@PathVariable Integer id) {
         return ResponseEntity.ok(candidateJobService.applyForJob(id));
     }
 
-    // 🟡 CANDIDATE: View all applied jobs
+    //CANDIDATE: View all applied jobs
     @PreAuthorize("hasRole('CANDIDATE')")
     @GetMapping("/jobs/applied")
     public ResponseEntity<List<JobDetailDto>> getAppliedJobs() {
         return ResponseEntity.ok(candidateJobService.getAppliedJobs());
     }
 
+    //profile
     @PreAuthorize("hasRole('CANDIDATE')")
     @GetMapping("/candidates/profile")
     public ResponseEntity<CandidateProfileDto> getProfile() {
         return ResponseEntity.ok(candidateProfileService.getProfile());
     }
 
-    // 🟡 Update own profile
+    //Update own profile
     @PreAuthorize("hasRole('CANDIDATE')")
     @PutMapping("/candidates/profile")
     public ResponseEntity<ApiResponse> updateProfile(@RequestBody CandidateProfileDto profileDto) {

@@ -87,9 +87,9 @@ public class JobService {
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
         // ensure recruiter can only view applicants for his/her job
-        if (!job.getPostedBy().getId().equals(recruiter.getId())) {
-            throw new RuntimeException("Access denied: You can only view applicants for your own jobs");
-        }
+//        if (!job.getPostedBy().getId().equals(recruiter.getId())) {
+//            throw new RuntimeException("Access denied: You can only view applicants for your own jobs");
+//        }
 
         return jobApplicationRepository.findByJob(job)
                 .stream()
