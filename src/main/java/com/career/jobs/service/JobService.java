@@ -1,15 +1,19 @@
 package com.career.jobs.service;
 
+import com.career.jobs.dto.ApplicantDto;
 import com.career.jobs.dto.JobRequestDto;
 import com.career.jobs.dto.JobResponseDto;
+import com.career.jobs.model.Candidates;
 import com.career.jobs.model.Job;
 import com.career.jobs.model.Recruiter;
+import com.career.jobs.repository.JobApplicationRepository;
 import com.career.jobs.repository.JobRepository;
 import com.career.jobs.repository.RecruiterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +23,7 @@ public class JobService {
 
     private final JobRepository jobRepository;
     private final RecruiterRepository recruiterRepository;
+    private final JobApplicationRepository jobApplicationRepository;
 
     // Helper to get logged-in recruiter
     private Recruiter getLoggedInRecruiter() {
@@ -27,7 +32,7 @@ public class JobService {
                 .orElseThrow(() -> new RuntimeException("Recruiter not found for logged-in user"));
     }
 
-    // ✅ 1. Create Job
+    //1. Create Job
     public JobResponseDto createJob(JobRequestDto dto) {
         Recruiter recruiter = getLoggedInRecruiter();
 
@@ -55,7 +60,7 @@ public class JobService {
         return res;
     }
 
-    // ✅ 2. View all jobs by logged-in recruiter
+    //2. View all jobs by logged-in recruiter
     public List<JobResponseDto> getMyJobs() {
         Recruiter recruiter = getLoggedInRecruiter();
         return jobRepository.findByPostedBy(recruiter).stream().map(job -> {
@@ -71,5 +76,33 @@ public class JobService {
             res.setCreatedAt(job.getCreatedAt());
             return res;
         }).collect(Collectors.toList());
+    }
+
+    public List<ApplicantDto> getApplicants(Integer jobId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Recruiter recruiter = recruiterRepository.findByEmailId(email)
+                .orElseThrow(() -> new RuntimeException("Recruiter not found"));
+
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
+
+        // ensure recruiter can only view applicants for his/her job
+        if (!job.getPostedBy().getId().equals(recruiter.getId())) {
+            throw new RuntimeException("Access denied: You can only view applicants for your own jobs");
+        }
+
+        return jobApplicationRepository.findByJob(job)
+                .stream()
+                .map(app -> {
+                    Candidates c = app.getCandidate();
+                    ApplicantDto dto = new ApplicantDto();
+                    dto.setFullName(c.getFullName());
+                    dto.setEmail(c.getEmailId());
+                    dto.setExperience(c.getExperience());
+                    dto.setSkills(c.getSkills());
+                    dto.setAppliedAt(app.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
+                    return dto;
+                }).collect(Collectors.toList());
     }
 }
