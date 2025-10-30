@@ -15,14 +15,12 @@ public class AuthController {
 
     private final AuthService authService;
 
-    // -------- Candidate Registration --------
     @PostMapping("/register/candidate")
     public ResponseEntity<AuthResponse> registerCandidate(@RequestBody RegisterCandidateDto dto) {
         String token = authService.registerCandidate(dto);
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
-    // -------- Recruiter Registration (ADMIN only) --------
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register/recruiter")
     public ResponseEntity<AuthResponse> registerRecruiter(@RequestBody RegisterRecruiterDto dto) {
@@ -30,7 +28,6 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
-    // -------- Login --------
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
         String token = authService.login(request);
